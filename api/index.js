@@ -12,6 +12,8 @@ const requireAuth = auth({
   issuerBaseURL: process.env.AUTH0_ISSUER,
   tokenSigningAlg: "RS256",
 });
+console.log("Audience:", process.env.AUTH0_AUDIENCE);
+console.log("Issuer:", process.env.AUTH0_ISSUER);
 
 const app = express();
 
@@ -125,8 +127,10 @@ app.post("/verify-user", requireAuth, async (req, res) => {
   // the value should match your audience according to this document: https://docs.google.com/document/d/1lYmaGZAS51aeCxfPzCwZHIk6C5mmOJJ7yHBNPJuGimU/edit#heading=h.fr3s9fjui5yn
   const email = req.auth.payload[`${process.env.AUTH0_AUDIENCE}/email`];
   const name = req.auth.payload[`${process.env.AUTH0_AUDIENCE}/name`];
+
   console.log(auth0Id, email, name);
   console.log(req.auth);
+  console.log("Full Auth0 payload:", JSON.stringify(req.auth.payload, null, 2));
 
   const user = await prisma.user.findUnique({
     where: {

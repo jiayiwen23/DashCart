@@ -12,7 +12,6 @@ export default function VerifyUser() {
       try {
         console.log("API URL:", process.env.REACT_APP_API_URL);
         console.log("Starting user verification...");
-        console.log("API URL:", process.env.REACT_APP_API_URL);
 
         // Make a call to our API to verify the user in our database, if it doesn't exist we'll insert it into our database
         const response = await fetch(
@@ -38,7 +37,7 @@ export default function VerifyUser() {
 
         // Redirect here to where the user should go after verifying their account
         if (user?.auth0Id) {
-          navigate("/app"); // Update this path based on your application's routing
+          navigate("/"); // Update this path based on your application's routing
         }
       } catch (error) {
         console.error("Error verifying user:", error);

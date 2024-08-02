@@ -1,18 +1,34 @@
 import { useAuth0 } from "@auth0/auth0-react";
+import { useSearchParams } from "react-router-dom";
+import styles from "./Home.module.css";
+import { useState, useEffect } from "react";
+import { fetchAllProduct } from "../Utils/fetchAllProduct";
 
 export default function Home() {
-  const { loginWithRedirect, isAuthenticated, isLoading } = useAuth0();
-  const { logout } = useAuth0();
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const getProducts = async () => {
+      const data = await fetchAllProduct();
+      setProducts(data);
+    };
+    getProducts();
+  }, []);
   return (
-    <div className="home">
-      <h1>Assignment 3</h1>
-      <div>
-        <button className="btn-primary" onClick={() => loginWithRedirect()}>
-          Login
-        </button>
-        <p>Loading: {String(isLoading)} </p>
-        <p>User Authenticated: {String(isAuthenticated)}</p>
-        <button onClick={() => logout()}>Log Out</button>
+    <div className={styles.Home}>
+      <h1>Today's trending products</h1>
+      <div className={styles.productList}>
+        {products.slice(0, 8).map((product) => (
+          <div key={product.id} className={styles.productCard}>
+            <img
+              src={product.image}
+              alt={product.title}
+              className={styles.productImage}
+            />
+            <p className={styles.productTitle}>{product.title}</p>
+            <p className={styles.productPrice}>{product.price}</p>
+          </div>
+        ))}
       </div>
     </div>
   );

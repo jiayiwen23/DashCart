@@ -1,12 +1,13 @@
 import React from "react";
 import Navbar from "./components/Navbar/Navbar";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./Pages/Home";
-import VerifyUser from "./Utils/VerifyUser";
 import { Auth0Provider } from "@auth0/auth0-react";
 import { AuthTokenProvider } from "./AuthTokenContext";
 import { requestedScopes } from "./constants";
 import "./App.css";
+import Home from "./Pages/Home";
+import VerifyUser from "./Utils/VerifyUser";
+import ProductDetails from "./Pages/ProductDetails";
 
 const App = () => {
   return (
@@ -26,6 +27,10 @@ const App = () => {
               <Navbar />
               <Routes>
                 <Route path="/" element={<Home />} />
+                <Route
+                  path="/product-details/:productId"
+                  element={<ProductDetails />}
+                />
                 <Route path="/verify-user" element={<VerifyUser />} />
               </Routes>
             </BrowserRouter>

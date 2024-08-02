@@ -1,29 +1,3 @@
-// import React from "react";
-// import { useNavigate } from "react-router-dom";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faShoppingCart, faUser } from "@fortawesome/free-solid-svg-icons";
-// import styles from "./Navbar.module.css";
-
-// const Navbar = () => {
-//   const navigate = useNavigate();
-//   return (
-//     <nav className={styles.navBar}>
-//       <img src="/target.webp" alt="TargetLogo" className={styles.navImage} />
-//       <div className={styles.navButtons}>
-//         <button onClick={() => navigate("/")}>Home</button>
-//         <button onClick={() => navigate("/cart")}>
-//           <FontAwesomeIcon icon={faShoppingCart} />
-//         </button>
-//         <button onClick={() => navigate("/profile")}>
-//           <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
-//         </button>
-//       </div>
-//     </nav>
-//   );
-// };
-
-// export default Navbar;
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

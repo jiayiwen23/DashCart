@@ -3,9 +3,11 @@ import { useSearchParams } from "react-router-dom";
 import styles from "./Home.module.css";
 import { useState, useEffect } from "react";
 import { fetchAllProduct } from "../Utils/fetchAllProduct";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   const [products, setProducts] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getProducts = async () => {
@@ -19,7 +21,10 @@ export default function Home() {
       <h1>Today's trending products</h1>
       <div className={styles.productList}>
         {products.slice(0, 8).map((product) => (
-          <div key={product.id} className={styles.productCard}>
+          <div
+            className={styles.productCard}
+            onClick={() => navigate(`/product-details/${product.id}`)}
+          >
             <img
               src={product.image}
               alt={product.title}

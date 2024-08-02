@@ -144,39 +144,47 @@ app.delete("/carts/:id", async (req, res) => {
   }
 });
 
-//create a new cart item linked to a cart
+//create or update a cart item linked to a cart
 app.post("/cart-items", async (req, res) => {
   const { cartId, productId, quantity } = req.body;
+
   if (!cartId || !productId || !quantity) {
     return res
       .status(400)
       .json({ error: "Cart ID, product ID, and quantity are required" });
   }
+
   try {
-    // Ensure the cart exists
-    const cart = await prisma.cart.findUnique({
-      where: { id: parseInt(cartId) },
-    });
-
-    if (!cart) {
-      return res.status(404).json({ error: "Cart not found" });
-    }
-
-    // Create the new cart item
-    const newCartItem = await prisma.cartItem.create({
-      data: {
+    // Check if the item already exists in the cart
+    const existingCartItem = await prisma.cartItem.findFirst({
+      where: {
         cartId: parseInt(cartId),
         productId: parseInt(productId),
-        quantity: parseInt(quantity),
-        cart: {
-          connect: { id: parseInt(cartId) },
-        },
       },
     });
-    res.status(201).json(newCartItem);
+
+    let cartItem;
+    if (existingCartItem) {
+      // Update the quantity of the existing item
+      cartItem = await prisma.cartItem.update({
+        where: { id: existingCartItem.id },
+        data: { quantity: existingCartItem.quantity + parseInt(quantity) },
+      });
+    } else {
+      // Create a new cart item
+      cartItem = await prisma.cartItem.create({
+        data: {
+          cartId: parseInt(cartId),
+          productId: parseInt(productId),
+          quantity: parseInt(quantity),
+        },
+      });
+    }
+
+    res.status(201).json(cartItem);
   } catch (error) {
-    console.error("Failed to create cart item:", error);
-    res.status(500).json({ error: "Failed to create cart item" });
+    console.error("Failed to add cart item:", error);
+    res.status(500).json({ error: "Failed to add cart item" });
   }
 });
 
@@ -208,41 +216,20 @@ app.get("/carts/:cartId/items/:productId", async (req, res) => {
   }
 });
 
-// update a specific cart item in a specific cart
-app.put("/carts/:cartId/items/:productId", async (req, res) => {
+//get all cart items for a specific cart
+app.get("/carts/:cartId/items", async (req, res) => {
   const cartId = parseInt(req.params.cartId);
-  const productId = parseInt(req.params.productId);
-  const { quantity } = req.body;
-
-  if (isNaN(cartId) || isNaN(productId)) {
-    return res.status(400).json({ error: "Invalid cart ID or product ID" });
+  if (isNaN(cartId)) {
+    return res.status(400).json({ error: "Invalid cart ID" });
   }
-
-  if (!quantity) {
-    return res.status(400).json({ error: "Quantity is required" });
-  }
-
   try {
-    const cartItem = await prisma.cartItem.findFirst({
-      where: {
-        cartId: cartId,
-        productId: productId,
-      },
+    const cartItems = await prisma.cartItem.findMany({
+      where: { cartId: cartId },
     });
-
-    if (!cartItem) {
-      return res.status(404).json({ error: "Cart item not found" });
-    }
-
-    const updatedCartItem = await prisma.cartItem.update({
-      where: { id: cartItem.id },
-      data: { quantity: parseInt(quantity) },
-    });
-
-    res.json(updatedCartItem);
+    res.json(cartItems);
   } catch (error) {
-    console.error("Failed to update cart item:", error);
-    res.status(500).json({ error: "Failed to update cart item" });
+    console.error("Failed to fetch cart items:", error);
+    res.status(500).json({ error: "Failed to fetch cart items" });
   }
 });
 

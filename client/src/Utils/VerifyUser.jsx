@@ -1,8 +1,6 @@
 import { useEffect } from "react";
 import { useAuthToken } from "../AuthTokenContext";
 import { useNavigate } from "react-router-dom";
-import Home from "./Home";
-
 export default function VerifyUser() {
   const navigate = useNavigate();
   const { accessToken } = useAuthToken();

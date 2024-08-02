@@ -19,7 +19,7 @@ model User {
   email     String   @unique
   name      String
   cart      Cart?    // Optional relation
-  cartId    Int?     @unique // Make this nullable if a cart is not immediately required
+  cartId    Int?     @unique 
 }
 
 model Cart { 

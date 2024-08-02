@@ -1,5 +1,3 @@
-import { useAuth0 } from "@auth0/auth0-react";
-import { useSearchParams } from "react-router-dom";
 import styles from "./Home.module.css";
 import { useState, useEffect } from "react";
 import { fetchAllProduct } from "../Utils/fetchAllProduct";
@@ -23,6 +21,7 @@ export default function Home() {
         {products.slice(0, 8).map((product) => (
           <div
             className={styles.productCard}
+            key={product.id}
             onClick={() => navigate(`/product-details/${product.id}`)}
           >
             <img

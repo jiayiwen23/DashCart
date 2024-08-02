@@ -25,98 +25,6 @@ app.use(morgan("dev"));
 const { PrismaClient } = pkg;
 const prisma = new PrismaClient();
 
-// this is a public endpoint because it doesn't have the requireAuth middleware
-app.get("/ping", (req, res) => {
-  res.send("pong");
-});
-
-// // Route to retrieve all users
-// app.get("/users", async (req, res) => {
-//   try {
-//     const users = await prisma.user.findMany();
-//     res.json(users);
-//   } catch (error) {
-//     console.error("Failed to fetch users:", error);
-//     res.status(500).json({ error: "Failed to fetch users" });
-//   }
-// });
-
-// // Route to retrieve a specific user by auth0Id
-// app.get("/users/:auth0Id", async (req, res) => {
-//   const auth0Id = req.params.auth0Id;
-//   try {
-//     const user = await prisma.user.findUnique({
-//       where: { auth0Id },
-//     });
-//     if (!user) {
-//       return res.status(404).json({ error: "User not found" });
-//     }
-//     res.json(user);
-//   } catch (error) {
-//     console.error("Failed to fetch user:", error);
-//     res.status(500).json({ error: "Failed to fetch user" });
-//   }
-// });
-
-// // Route to create a new user
-// app.post("/users", async (req, res) => {
-//   const { auth0Id, email, name } = req.body;
-//   console.log(auth0Id, email, name);
-//   if (!auth0Id || !email || !name) {
-//     return res
-//       .status(400)
-//       .json({ error: "Auth0 ID, email, and name are required" });
-//   }
-//   try {
-//     const newUser = await prisma.user.create({
-//       data: { auth0Id, email, name },
-//     });
-//     res.status(201).json(newUser);
-//   } catch (error) {
-//     console.error("Failed to create user:", error);
-//     res.status(500).json({ error: "Failed to create user" });
-//   }
-// });
-
-// // Route to update an existing user by auth0Id
-// app.put("/users/:auth0Id", async (req, res) => {
-//   const auth0Id = req.params.auth0Id;
-//   const { email, name } = req.body;
-//   if (!email || !name) {
-//     return res.status(400).json({ error: "Email and name are required" });
-//   }
-//   try {
-//     const updatedUser = await prisma.user.update({
-//       where: { auth0Id },
-//       data: { email, name },
-//     });
-//     res.json(updatedUser);
-//   } catch (error) {
-//     if (error.code === "P2025") {
-//       return res.status(404).json({ error: "User not found" });
-//     }
-//     console.error("Failed to update user:", error);
-//     res.status(500).json({ error: "Failed to update user" });
-//   }
-// });
-
-// // Route to delete a user by auth0Id
-// app.delete("/users/:auth0Id", async (req, res) => {
-//   const auth0Id = req.params.auth0Id;
-//   try {
-//     const deletedUser = await prisma.user.delete({
-//       where: { auth0Id },
-//     });
-//     res.json(deletedUser);
-//   } catch (error) {
-//     if (error.code === "P2025") {
-//       return res.status(404).json({ error: "User not found" });
-//     }
-//     console.error("Failed to delete user:", error);
-//     res.status(500).json({ error: "Failed to delete user" });
-//   }
-// });
-
 // this endpoint is used by the client to verify the user status and to make sure the user is registered in our database once they signup with Auth0
 // if not registered in our database we will create it.
 // if the user is already registered we will return the user information
@@ -152,6 +60,220 @@ app.post("/verify-user", requireAuth, async (req, res) => {
   }
 });
 
-app.listen(8000, () => {
-  console.log("Server running on http://localhost:8000 🎉 🚀");
+// get cart by id and include all cart items
+app.get("/carts/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) {
+    return res.status(400).json({ error: "Invalid cart ID" });
+  }
+  try {
+    const cart = await prisma.cart.findUnique({
+      where: { id },
+      include: {
+        cartItems: true, // Include related cart items
+      },
+    });
+    if (!cart) {
+      return res.status(404).json({ error: "Cart not found" });
+    }
+    res.json(cart);
+  } catch (error) {
+    console.error("Failed to fetch cart:", error);
+    res.status(500).json({ error: "Failed to fetch cart" });
+  }
+});
+
+//create a new cart and link to user
+app.post("/carts", async (req, res) => {
+  const { userId } = req.body;
+  if (!userId) {
+    return res.status(400).json({ error: "User ID is required" });
+  }
+  try {
+    const newCart = await prisma.cart.create({
+      data: { userId: parseInt(userId) },
+    });
+
+    // Update the user's cartId
+    await prisma.user.update({
+      where: { id: parseInt(userId) },
+      data: { cartId: newCart.id },
+    });
+
+    res.status(201).json(newCart);
+  } catch (error) {
+    console.error("Failed to create cart:", error);
+    res.status(500).json({ error: "Failed to create cart" });
+  }
+});
+
+// delete a cart by id and delete user's cartid
+app.delete("/carts/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) {
+    return res.status(400).json({ error: "Invalid cart ID" });
+  }
+  try {
+    // Find the cart first to get the userId
+    const cart = await prisma.cart.findUnique({
+      where: { id },
+    });
+
+    if (!cart) {
+      return res.status(404).json({ error: "Cart not found" });
+    }
+
+    // Delete the cart
+    const deletedCart = await prisma.cart.delete({
+      where: { id },
+    });
+
+    // Update the user's cartId to null
+    await prisma.user.update({
+      where: { id: cart.userId },
+      data: { cartId: null },
+    });
+
+    res.json(deletedCart);
+  } catch (error) {
+    if (error.code === "P2025") {
+      return res.status(404).json({ error: "Cart not found" });
+    }
+    console.error("Failed to delete cart:", error);
+    res.status(500).json({ error: "Failed to delete cart" });
+  }
+});
+
+//create a new cart item linked to a cart
+app.post("/cart-items", async (req, res) => {
+  const { cartId, productId, quantity } = req.body;
+  if (!cartId || !productId || !quantity) {
+    return res
+      .status(400)
+      .json({ error: "Cart ID, product ID, and quantity are required" });
+  }
+  try {
+    // Ensure the cart exists
+    const cart = await prisma.cart.findUnique({
+      where: { id: parseInt(cartId) },
+    });
+
+    if (!cart) {
+      return res.status(404).json({ error: "Cart not found" });
+    }
+
+    // Create the new cart item
+    const newCartItem = await prisma.cartItem.create({
+      data: {
+        cartId: parseInt(cartId),
+        productId: parseInt(productId),
+        quantity: parseInt(quantity),
+        cart: {
+          connect: { id: parseInt(cartId) },
+        },
+      },
+    });
+    res.status(201).json(newCartItem);
+  } catch (error) {
+    console.error("Failed to create cart item:", error);
+    res.status(500).json({ error: "Failed to create cart item" });
+  }
+});
+
+// get a specific cart item in a specific cart
+app.get("/carts/:cartId/items/:productId", async (req, res) => {
+  const cartId = parseInt(req.params.cartId);
+  const productId = parseInt(req.params.productId);
+
+  if (isNaN(cartId) || isNaN(productId)) {
+    return res.status(400).json({ error: "Invalid cart ID or product ID" });
+  }
+
+  try {
+    const cartItem = await prisma.cartItem.findFirst({
+      where: {
+        cartId: cartId,
+        productId: productId,
+      },
+    });
+
+    if (!cartItem) {
+      return res.status(404).json({ error: "Cart item not found" });
+    }
+
+    res.json(cartItem);
+  } catch (error) {
+    console.error("Failed to fetch cart item:", error);
+    res.status(500).json({ error: "Failed to fetch cart item" });
+  }
+});
+
+// update a specific cart item in a specific cart
+app.put("/carts/:cartId/items/:productId", async (req, res) => {
+  const cartId = parseInt(req.params.cartId);
+  const productId = parseInt(req.params.productId);
+  const { quantity } = req.body;
+
+  if (isNaN(cartId) || isNaN(productId)) {
+    return res.status(400).json({ error: "Invalid cart ID or product ID" });
+  }
+
+  if (!quantity) {
+    return res.status(400).json({ error: "Quantity is required" });
+  }
+
+  try {
+    const cartItem = await prisma.cartItem.findFirst({
+      where: {
+        cartId: cartId,
+        productId: productId,
+      },
+    });
+
+    if (!cartItem) {
+      return res.status(404).json({ error: "Cart item not found" });
+    }
+
+    const updatedCartItem = await prisma.cartItem.update({
+      where: { id: cartItem.id },
+      data: { quantity: parseInt(quantity) },
+    });
+
+    res.json(updatedCartItem);
+  } catch (error) {
+    console.error("Failed to update cart item:", error);
+    res.status(500).json({ error: "Failed to update cart item" });
+  }
+});
+
+// delete a specific cart item in a specific cart
+app.delete("/carts/:cartId/items/:productId", async (req, res) => {
+  const cartId = parseInt(req.params.cartId);
+  const productId = parseInt(req.params.productId);
+
+  if (isNaN(cartId) || isNaN(productId)) {
+    return res.status(400).json({ error: "Invalid cart ID or product ID" });
+  }
+
+  try {
+    const cartItem = await prisma.cartItem.findFirst({
+      where: {
+        cartId: cartId,
+        productId: productId,
+      },
+    });
+
+    if (!cartItem) {
+      return res.status(404).json({ error: "Cart item not found" });
+    }
+
+    const deletedCartItem = await prisma.cartItem.delete({
+      where: { id: cartItem.id },
+    });
+
+    res.json(deletedCartItem);
+  } catch (error) {
+    console.error("Failed to delete cart item:", error);
+    res.status(500).json({ error: "Failed to delete cart item" });
+  }
 });

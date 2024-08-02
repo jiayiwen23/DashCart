@@ -15,16 +15,17 @@ datasource db {
 
 model User {
   id        Int      @id @default(autoincrement())
-  auth0Id   String   @unique
+  auth0Id   String   @unique @default("")
   email     String   @unique
   name      String
-  cart      Cart     // One-to-one relationship with Cart
+  cart      Cart?    // Optional relation
+  cartId    Int?     @unique // Make this nullable if a cart is not immediately required
 }
 
 model Cart { 
   id        Int        @id @default(autoincrement()) 
-  userId    Int        // Non-nullable Foreign key for User
   user      User       @relation(fields: [userId], references: [id])
+  userId    Int        @unique
   cartItems CartItem[] // One-to-many relationship with CartItem
 }
 

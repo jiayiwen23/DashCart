@@ -10,9 +10,6 @@ export default function VerifyUser() {
   useEffect(() => {
     async function verifyUser() {
       try {
-        console.log("API URL:", process.env.REACT_APP_API_URL);
-        console.log("Starting user verification...");
-
         // Make a call to our API to verify the user in our database, if it doesn't exist we'll insert it into our database
         const response = await fetch(
           `${process.env.REACT_APP_API_URL}/verify-user`,

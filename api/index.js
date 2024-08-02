@@ -130,7 +130,6 @@ app.post("/verify-user", requireAuth, async (req, res) => {
 
   console.log(auth0Id, email, name);
   console.log(req.auth);
-  console.log("Full Auth0 payload:", JSON.stringify(req.auth.payload, null, 2));
 
   const user = await prisma.user.findUnique({
     where: {

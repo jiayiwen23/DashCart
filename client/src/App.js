@@ -8,6 +8,7 @@ import "./App.css";
 import Home from "./Pages/Home";
 import VerifyUser from "./Utils/VerifyUser";
 import ProductDetails from "./Pages/ProductDetails";
+import Cart from "./Pages/Cart";
 
 const App = () => {
   return (
@@ -32,6 +33,7 @@ const App = () => {
                   element={<ProductDetails />}
                 />
                 <Route path="/verify-user" element={<VerifyUser />} />
+                <Route path="/cart" element={<Cart />} />
               </Routes>
             </BrowserRouter>
           </AuthTokenProvider>

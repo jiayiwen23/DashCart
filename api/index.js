@@ -55,35 +55,41 @@ app.post("/verify-user", requireAuth, async (req, res) => {
   }
 });
 
-// POST endpoint to create a new cart using an auth0Id, only if it doesn't already exist
-app.post("/create-cart", requireAuth, async (req, res) => {
-  const auth0Id = req.auth.payload.sub; // Get auth0Id from auth middleware
+app.post("/add-item", requireAuth, async (req, res) => {
+  const { productId, quantity } = req.body;
+  const auth0Id = req.auth.payload.sub;
 
-  // Try to find the user by auth0Id
-  const user = await prisma.user.findUnique({
-    where: { auth0Id },
-  });
+  try {
+    const user = await prisma.user.findUnique({ where: { auth0Id } });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
 
-  if (!user) {
-    return res.status(404).json({ error: "User not found" });
+    let cart = await prisma.cart.findUnique({ where: { userId: user.id } });
+    if (!cart) {
+      cart = await prisma.cart.create({ data: { userId: user.id } });
+    }
+
+    const existingItem = await prisma.cartItem.findFirst({
+      where: { cartId: cart.id, productId },
+    });
+
+    if (existingItem) {
+      const updatedItem = await prisma.cartItem.update({
+        where: { id: existingItem.id },
+        data: { quantity: existingItem.quantity + quantity },
+      });
+      res.json(updatedItem);
+    } else {
+      const newItem = await prisma.cartItem.create({
+        data: { cartId: cart.id, productId, quantity },
+      });
+      res.status(201).json(newItem);
+    }
+  } catch (error) {
+    console.error("Error adding item to cart:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
-
-  const existingCart = await prisma.cart.findUnique({
-    where: { userId: user.id },
-  });
-
-  if (existingCart) {
-    return res.json(existingCart); // If cart exists, return the existing cart
-  }
-
-  // Create a new cart associated with the user
-  const cart = await prisma.cart.create({
-    data: {
-      user: { connect: { id: user.id } },
-    },
-  });
-
-  res.status(201).json(cart);
 });
 
 app.listen(8000, () => {

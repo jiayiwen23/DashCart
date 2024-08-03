@@ -1,79 +1,49 @@
-// import React, { useEffect } from "react";
-// import { useAuthToken } from "../AuthTokenContext";
-
-// const addToCart = () => {
-//   const { accessToken } = useAuthToken();
-
-//   useEffect(() => {
-//     async function createOrFetchCart() {
-//       try {
-//         const response = await fetch(
-//           `${process.env.REACT_APP_API_URL}/create-cart`,
-//           {
-//             method: "POST",
-//             headers: {
-//               "Content-Type": "application/json",
-//               Authorization: `Bearer ${accessToken})`,
-//             },
-//           }
-//         );
-
-//         if (!response.ok) {
-//           throw new Error("Failed to create or fetch cart");
-//         }
-
-//         const cart = await response.json();
-
-//         console.log("Cart data", cart);
-//       } catch (error) {
-//         console.error("Error in creating or fetching cart:", error);
-//       }
-//     }
-//     if (accessToken) {
-//       createOrFetchCart();
-//     }
-//   }, [accessToken]);
-//   return <div>addToCart</div>;
-// };
-
-// export default addToCart;
-
 import { useCallback } from "react";
 import { useAuthToken } from "../AuthTokenContext";
 
 const useAddToCart = () => {
   const { accessToken } = useAuthToken();
 
-  // Define the function that handles adding to cart
-  const addToCart = useCallback(async () => {
-    if (!accessToken) {
-      console.error("No access token available.");
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/create-cart`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to create or fetch cart");
+  const addToCart = useCallback(
+    async (productId, quantity = 1) => {
+      if (!accessToken) {
+        console.error("No access token available.");
+        return;
       }
 
-      const cart = await response.json();
-      console.log("Cart data:", cart);
-      return cart;
-    } catch (error) {
-      console.error("Error in creating or fetching cart:", error);
-    }
-  }, [accessToken]);
+      if (!productId) {
+        console.error("Product ID is required to add to cart.");
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/add-item`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify({ productId, quantity }),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(
+            `Failed to add item to cart: ${response.status} ${response.statusText}`
+          );
+        }
+
+        const cartItem = await response.json();
+        console.log("Item added to cart:", cartItem);
+        return cartItem;
+      } catch (error) {
+        console.error("Error in adding item to cart:", error);
+      }
+    },
+    [accessToken]
+  );
 
   return addToCart;
 };

@@ -9,7 +9,7 @@ import useAddToCart from "../Utils/useAddToCart";
 const ProductDetails = () => {
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
-  const { user, isAuthenticated } = useAuth0();
+  const { isAuthenticated } = useAuth0();
   const addToCart = useAddToCart();
 
   useEffect(() => {
@@ -21,11 +21,29 @@ const ProductDetails = () => {
   }, [productId]);
 
   const handleAddToCart = () => {
-    addToCart().then((cart) => {
-      if (cart) {
-        console.log("Cart has been updated or created", cart);
-      }
-    });
+    if (!isAuthenticated) {
+      console.log("User must be authenticated to add items to the cart.");
+      return;
+    }
+
+    if (!product) {
+      console.log("No product details available.");
+      return;
+    }
+
+    const quantity = 1;
+
+    addToCart(product.id, quantity)
+      .then((cartItem) => {
+        if (cartItem) {
+          console.log("Product added to cart successfully:", cartItem);
+        } else {
+          console.log("Failed to add product to cart.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error adding product to cart:", error);
+      });
   };
 
   if (!product) {

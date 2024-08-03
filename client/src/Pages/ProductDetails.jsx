@@ -4,7 +4,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import styles from "./ProductDetails.module.css";
 import { fetchProductById } from "../Utils/fetchProductById";
 import RequireAuth from "../Utils/RequireAuth";
-import useAddToCart from "../Utils/useAddToCart";
+import useAddToCart from "../hooks/useAddToCart";
 
 const ProductDetails = () => {
   const { productId } = useParams();

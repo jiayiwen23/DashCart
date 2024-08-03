@@ -1,18 +1,30 @@
-import React, { useState, useEffect } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
+import React from "react";
 import RequireAuth from "../Utils/RequireAuth";
+import useFetchCartItems from "../hooks/useFetchCartItems";
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState([]);
+  const { cartItems, isLoading, error } = useFetchCartItems();
 
-  //   useEffect(() => {
-  //     const fetchCartItems = async () =>
-  //   })
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error fetching cart items.</div>;
+
+  console.log(cartItems);
 
   return (
     <RequireAuth>
       <div>
-        <h1>Your cart</h1>
+        <h1>Your Cart</h1>
+        <ul>
+          {cartItems.length > 0 ? (
+            cartItems.map((item) => (
+              <li key={item.id}>
+                Product ID: {item.productId}, Quantity: {item.quantity}
+              </li>
+            ))
+          ) : (
+            <p>Your cart is empty.</p>
+          )}
+        </ul>
       </div>
     </RequireAuth>
   );

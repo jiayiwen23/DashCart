@@ -92,6 +92,36 @@ app.post("/add-item", requireAuth, async (req, res) => {
   }
 });
 
+app.get("/cart-items", requireAuth, async (req, res) => {
+  const auth0Id = req.auth.payload.sub;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { auth0Id },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const cart = await prisma.cart.findUnique({
+      where: { userId: user.id },
+      include: {
+        cartItems: true,
+      },
+    });
+
+    if (!cart) {
+      return res.status(404).json({ error: "Cart not found" });
+    }
+
+    res.json(cart.cartItems);
+  } catch (error) {
+    console.error("Failed to retrieve cart items:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 app.listen(8000, () => {
   console.log(`Server running on port 8000`);
 });

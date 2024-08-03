@@ -2,9 +2,20 @@ import React from "react";
 import RequireAuth from "../Utils/RequireAuth";
 import useFetchCartItems from "../hooks/useFetchCartItems";
 import styles from "./Cart.module.css";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const Cart = () => {
   const { cartItems, isLoading, error } = useFetchCartItems();
+  const { isAuthenticated, loginWithRedirect } = useAuth0();
+
+  if (!isAuthenticated) {
+    return (
+      <div className={styles.cartContainer}>
+        <h1>Start your journey now</h1>
+        <button onClick={loginWithRedirect}>Log In</button>
+      </div>
+    );
+  }
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error fetching cart items.</div>;

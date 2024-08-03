@@ -5,6 +5,7 @@ import pkg from "@prisma/client";
 import morgan from "morgan";
 import cors from "cors";
 import { auth } from "express-oauth2-jwt-bearer";
+import { loadProductsToDatabase } from "./productLoader.js";
 
 // this is a middleware that will validate the access token sent by the client
 const requireAuth = auth({
@@ -72,19 +73,28 @@ app.post("/add-item", requireAuth, async (req, res) => {
 
     const existingItem = await prisma.cartItem.findFirst({
       where: { cartId: cart.id, productId },
+      include: { product: true }, // Include product details when checking for existing items
     });
 
     if (existingItem) {
       const updatedItem = await prisma.cartItem.update({
         where: { id: existingItem.id },
         data: { quantity: existingItem.quantity + quantity },
+        include: { product: true }, // Include product details in the response after update
       });
-      res.json(updatedItem);
+      res.json({
+        item: updatedItem,
+        product: updatedItem.product, // Ensure product details are part of the response
+      });
     } else {
       const newItem = await prisma.cartItem.create({
         data: { cartId: cart.id, productId, quantity },
+        include: { product: true }, // Include product details in the response after creation
       });
-      res.status(201).json(newItem);
+      res.status(201).json({
+        item: newItem,
+        product: newItem.product, // Ensure product details are part of the response
+      });
     }
   } catch (error) {
     console.error("Error adding item to cart:", error);
@@ -107,7 +117,11 @@ app.get("/cart-items", requireAuth, async (req, res) => {
     const cart = await prisma.cart.findUnique({
       where: { userId: user.id },
       include: {
-        cartItems: true,
+        cartItems: {
+          include: {
+            product: true, // Include product details with each cart item
+          },
+        },
       },
     });
 
@@ -115,13 +129,31 @@ app.get("/cart-items", requireAuth, async (req, res) => {
       return res.status(404).json({ error: "Cart not found" });
     }
 
-    res.json(cart.cartItems);
+    const formattedCartItems = cart.cartItems.map((item) => ({
+      itemId: item.id,
+      quantity: item.quantity,
+      product: {
+        productId: item.product.id,
+        title: item.product.title,
+        price: item.product.price,
+        image: item.product.image,
+        category: item.product.category,
+      },
+    }));
+
+    res.json(formattedCartItems); // Send the formatted cart items with product details
   } catch (error) {
     console.error("Failed to retrieve cart items:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
 
-app.listen(8000, () => {
+app.listen(8000, async () => {
   console.log(`Server running on port 8000`);
+  try {
+    await loadProductsToDatabase();
+    console.log("Products loaded successfully");
+  } catch (err) {
+    console.error("Failed to load products", err);
+  }
 });

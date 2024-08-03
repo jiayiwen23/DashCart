@@ -27,7 +27,17 @@ const useFetchCartItems = () => {
         }
 
         const data = await response.json();
-        setCartItems(data);
+        setCartItems(
+          data.map((item) => ({
+            itemId: item.itemId,
+            quantity: item.quantity,
+            productId: item.product.productId,
+            title: item.product.title,
+            price: item.product.price,
+            image: item.product.image,
+            category: item.product.category,
+          }))
+        );
       } catch (error) {
         console.error("Error fetching cart items:", error);
         setError(error);

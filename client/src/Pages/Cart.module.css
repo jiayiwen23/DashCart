@@ -1,0 +1,36 @@
+.cartContainer {
+  padding: 20px;
+}
+
+.cartList {
+  list-style: none;
+  padding: 0;
+}
+
+.cartItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+}
+
+.cartItem img {
+  width: 100px;
+  height: 100px;
+  margin-right: 20px;
+}
+
+.cartItemDetails {
+  flex: 1;
+}
+
+.cartItemTitle {
+  margin: 0;
+  font-size: 1.2em;
+}
+
+.cartItemPrice,
+.cartItemQuantity {
+  margin: 5px 0;
+}

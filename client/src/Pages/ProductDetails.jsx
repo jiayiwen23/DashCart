@@ -9,8 +9,17 @@ import useAddToCart from "../Utils/useAddToCart";
 const ProductDetails = () => {
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
+  const [quantity, setQuantity] = useState(1);
   const { isAuthenticated } = useAuth0();
   const addToCart = useAddToCart();
+
+  const addQuantity = () => {
+    setQuantity((quantity) => quantity + 1);
+  };
+
+  const decreaseQuantity = () => {
+    setQuantity((quantity) => quantity - 1);
+  };
 
   useEffect(() => {
     const getProductDetails = async () => {
@@ -30,8 +39,6 @@ const ProductDetails = () => {
       console.log("No product details available.");
       return;
     }
-
-    const quantity = 1;
 
     addToCart(product.id, quantity)
       .then((cartItem) => {
@@ -59,6 +66,13 @@ const ProductDetails = () => {
       />
       <p className={styles.productPrice}>${product.price}</p>
       <p className={styles.productDescription}> {product.description}</p>
+      <div className={styles.productQuantity}>
+        <button onClick={decreaseQuantity} disabled={quantity === 1}>
+          -
+        </button>
+        <p>{quantity}</p>
+        <button onClick={addQuantity}>+</button>
+      </div>
       <RequireAuth>
         <button className={styles.addToCartButton} onClick={handleAddToCart}>
           Add to Cart

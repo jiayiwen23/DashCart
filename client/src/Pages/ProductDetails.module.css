@@ -27,6 +27,12 @@
   margin: 10px 0;
 }
 
+.productQuantity {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
 .addToCartButton {
   background-color: #28a745;
   color: white;

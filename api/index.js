@@ -107,7 +107,7 @@ app.put(
   requireAuth,
   async (req, res) => {
     const { itemId } = req.params;
-    const { quantity } = req.body; // New absolute quantity
+    const { quantity } = req.body;
     const auth0Id = req.auth.payload.sub;
 
     try {
@@ -132,11 +132,7 @@ app.put(
         });
         res.json(updatedItem);
       } else {
-        // If quantity is 0 or negative, remove the item from the cart
-        await prisma.cartItem.delete({
-          where: { id: cartItem.id },
-        });
-        res.json({ message: "Item removed from cart" });
+        throw new Error("Quantity cannot be negative");
       }
     } catch (error) {
       console.error("Error updating cart item:", error);
@@ -144,6 +140,51 @@ app.put(
     }
   }
 );
+
+app.delete("/cart-items/:itemId", requireAuth, async (req, res) => {
+  const { itemId } = req.params;
+  const auth0Id = req.auth.payload.sub;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { auth0Id },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const cartItem = await prisma.cartItem.findUnique({
+      where: {
+        id: parseInt(itemId),
+      },
+      include: {
+        cart: true,
+      },
+    });
+
+    if (!cartItem) {
+      return res.status(404).json({ error: "Cart item not found" });
+    }
+
+    if (cartItem.cart.userId !== user.id) {
+      return res
+        .status(403)
+        .json({ error: "Unauthorized access to cart item" });
+    }
+
+    await prisma.cartItem.delete({
+      where: {
+        id: cartItem.id,
+      },
+    });
+
+    res.status(204).send();
+  } catch (error) {
+    console.error("Failed to delete cart item:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 app.get("/cart-items", requireAuth, async (req, res) => {
   const auth0Id = req.auth.payload.sub;

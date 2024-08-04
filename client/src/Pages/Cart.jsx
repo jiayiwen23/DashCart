@@ -2,6 +2,7 @@ import React from "react";
 import RequireAuth from "../Utils/RequireAuth";
 import useFetchCartItems from "../hooks/useFetchCartItems";
 import { updateCartItemQuantity } from "../hooks/useCartItemQuantity";
+import useDeleteCartItem from "../hooks/useDeleteCartItem";
 import styles from "./Cart.module.css";
 import { useAuth0 } from "@auth0/auth0-react";
 import { formatCurrency } from "../Utils/formatCurrency";
@@ -11,6 +12,12 @@ const Cart = () => {
     useAuth0();
   const { cartItems, isLoading, error, setCartItems } =
     useFetchCartItems(isAuthenticated);
+  const {
+    deleteCartItem,
+    isLoading: isDeleting,
+    error: deleteError,
+    setError: setDeleteError,
+  } = useDeleteCartItem();
 
   const handleQuantityChange = async (itemId, newQuantity) => {
     try {
@@ -24,6 +31,17 @@ const Cart = () => {
       );
     } catch (error) {
       console.error("Failed to update quantity:", error);
+    }
+  };
+
+  const handleDeleteItem = async (itemId) => {
+    const success = await deleteCartItem(itemId);
+    if (success) {
+      setCartItems((prevItems) =>
+        prevItems.filter((item) => item.itemId !== itemId)
+      );
+    } else {
+      console.error("Failed to delete item:", deleteError);
     }
   };
 
@@ -80,6 +98,12 @@ const Cart = () => {
                   <div className={styles.itemTotal}>
                     {formatCurrency(item.price * item.quantity)}
                   </div>
+                  <button
+                    onClick={() => handleDeleteItem(item.itemId)}
+                    className={styles.deleteButton}
+                  >
+                    Delete
+                  </button>
                 </li>
               ))}
             </ul>

@@ -91,3 +91,16 @@
   font-size: 18px;
   color: #666;
 }
+
+.deleteButton {
+  background-color: #ff4136;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.deleteButton:hover {
+  background-color: #ff1a1a;
+}

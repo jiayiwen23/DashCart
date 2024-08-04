@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 
-const useFetchCartItems = () => {
+const useFetchCartItems = (isAuthenticated) => {
   const [cartItems, setCartItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const { getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
+    if (!isAuthenticated) {
+      return;
+    }
     const fetchCartItems = async () => {
       setIsLoading(true);
       try {
@@ -47,7 +50,7 @@ const useFetchCartItems = () => {
     };
 
     fetchCartItems();
-  }, [getAccessTokenSilently]);
+  }, [isAuthenticated, getAccessTokenSilently]);
 
   return { cartItems, isLoading, error };
 };

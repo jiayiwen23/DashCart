@@ -102,6 +102,49 @@ app.post("/add-item", requireAuth, async (req, res) => {
   }
 });
 
+app.put(
+  "/cart-items/:itemId/update-quantity",
+  requireAuth,
+  async (req, res) => {
+    const { itemId } = req.params;
+    const { quantity } = req.body; // New absolute quantity
+    const auth0Id = req.auth.payload.sub;
+
+    try {
+      const user = await prisma.user.findUnique({ where: { auth0Id } });
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      const cartItem = await prisma.cartItem.findUnique({
+        where: { id: parseInt(itemId) },
+      });
+
+      if (!cartItem) {
+        return res.status(404).json({ error: "Cart item not found" });
+      }
+
+      if (quantity > 0) {
+        const updatedItem = await prisma.cartItem.update({
+          where: { id: cartItem.id },
+          data: { quantity },
+          include: { product: true },
+        });
+        res.json(updatedItem);
+      } else {
+        // If quantity is 0 or negative, remove the item from the cart
+        await prisma.cartItem.delete({
+          where: { id: cartItem.id },
+        });
+        res.json({ message: "Item removed from cart" });
+      }
+    } catch (error) {
+      console.error("Error updating cart item:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+);
+
 app.get("/cart-items", requireAuth, async (req, res) => {
   const auth0Id = req.auth.payload.sub;
 

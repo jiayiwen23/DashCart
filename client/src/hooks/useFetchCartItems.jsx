@@ -52,7 +52,7 @@ const useFetchCartItems = (isAuthenticated) => {
     fetchCartItems();
   }, [isAuthenticated, getAccessTokenSilently]);
 
-  return { cartItems, isLoading, error };
+  return { cartItems, isLoading, error, setCartItems };
 };
 
 export default useFetchCartItems;

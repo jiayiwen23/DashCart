@@ -1,20 +1,16 @@
 import React from "react";
 import styles from "./ProductList.module.css";
 import { useState, useEffect } from "react";
-import { fetchAllProduct } from "../../Utils/fetchAllProduct";
 import { useNavigate } from "react-router-dom";
+import useFetchProducts from "../../hooks/useFetchProducts";
 
-export const ProductList = () => {
-  const [products, setProducts] = useState([]);
+const ProductList = () => {
+  const { products, loading, error } = useFetchProducts();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const getProducts = async () => {
-      const data = await fetchAllProduct();
-      setProducts(data);
-    };
-    getProducts();
-  }, []);
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
   return (
     <div className={styles.productList}>
       {products.slice(0, 8).map((product) => (
@@ -29,9 +25,11 @@ export const ProductList = () => {
             className={styles.productImage}
           />
           <p className={styles.productTitle}>{product.title}</p>
-          <p className={styles.productPrice}>{product.price}</p>
+          <p className={styles.productPrice}>${product.price}</p>
         </div>
       ))}
     </div>
   );
 };
+
+export default ProductList;

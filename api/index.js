@@ -148,6 +148,33 @@ app.get("/cart-items", requireAuth, async (req, res) => {
   }
 });
 
+app.get("/products", async (req, res) => {
+  try {
+    const products = await prisma.product.findMany();
+    res.status(200).json(products);
+  } catch (error) {
+    console.error("Failed to fetch products:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+app.get("/products/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const product = await prisma.product.findUnique({
+      where: { id: parseInt(id) },
+    });
+    if (product) {
+      res.json(product);
+    } else {
+      res.status(404).send("Product not found");
+    }
+  } catch (error) {
+    console.error("Failed to fetch product:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 app.listen(8000, async () => {
   console.log(`Server running on port 8000`);
   try {

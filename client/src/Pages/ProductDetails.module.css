@@ -24,11 +24,11 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  line-height: 15px;
 }
 
 .productTitle {
   font-size: 22px;
+  line-height: 1.5;
 }
 
 .productPrice {
@@ -40,6 +40,12 @@
 .category {
   font-size: 15px;
   color: gray;
+}
+
+.productDescription {
+  font-size: 14px;
+  color: #615e57;
+  line-height: 1.5;
 }
 
 .quantitySelector {

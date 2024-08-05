@@ -9,7 +9,7 @@ import { formatCurrency } from "../Utils/formatCurrency";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 
 const Cart = () => {
-  const { isAuthenticated, loginWithRedirect, getAccessTokenSilently } =
+  const { isAuthenticated, loginWithRedirect, getAccessTokenSilently, logout, user } =
     useAuth0();
   const { cartItems, isLoading, error, setCartItems } =
     useFetchCartItems(isAuthenticated);
@@ -74,7 +74,19 @@ const Cart = () => {
 
   return (
     <RequireAuth>
-      <div className={styles.cartContainer}>
+      <div className={styles.profileContainer}>
+          <p className={styles.welcomeText}>Welcome, {user.name}!</p>
+          <button
+            className={styles.logoutButton}
+            onClick={() =>
+              logout({ logoutParams: { returnTo: window.location.origin } })
+            }
+          >
+            Log out
+          </button>
+        </div>
+
+        <div className={styles.cartContainer}>
         <h1 className={styles.cartTitle}>Your Cart</h1>
         {cartItems.length > 0 ? (
           <>
@@ -129,17 +141,17 @@ const Cart = () => {
               ))}
             </ul>
             <div className={styles.cartSummary}>
-              <div className={styles.subtotal}>
-                <span>Subtotal  </span>
-                <span>
-                  {formatCurrency(
-                    cartItems.reduce(
-                      (total, item) => total + item.price * item.quantity,
-                      0
-                    )
-                  )}
-                </span>
-              </div>
+            <div className={styles.subtotal}>
+              <span className={styles.subtotalLabel}>Subtotal</span>
+              <span className={styles.subtotalAmount}>
+                {formatCurrency(
+                  cartItems.reduce(
+                    (total, item) => total + item.price * item.quantity,
+                    0
+                  )
+                )}
+              </span>
+            </div>
               <button className={styles.checkoutButton}>
                 Proceed to Checkout
               </button>

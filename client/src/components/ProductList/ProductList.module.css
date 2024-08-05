@@ -1,3 +1,7 @@
+.section {
+  padding: 20px;
+}
+
 .productList {
   display: flex;
   flex-wrap: wrap;
@@ -14,6 +18,7 @@
   flex-direction: column;
   justify-content: space-between;
   border-radius: 10px;
+  min-width: 200px;
 }
 
 .productList :hover {

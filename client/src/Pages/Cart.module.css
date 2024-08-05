@@ -2,10 +2,11 @@
   max-width: 1000px;
   margin: 0 auto;
   padding: 20px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .cartTitle {
-  font-size: 24px;
+  font-size: 22px;
   margin-bottom: 20px;
 }
 
@@ -33,13 +34,14 @@
 }
 
 .itemTitle {
-  font-size: 18px;
+  font-size: 16px;
   margin-bottom: 5px;
 }
 
 .itemPrice {
   font-weight: bold;
-  color: #333;
+  color: #8b5003;
+  font-size: 18px;
 }
 
 .quantityControl {
@@ -55,6 +57,15 @@
   border: none;
   cursor: pointer;
   font-size: 18px;
+}
+
+.quantityInput {
+  width: 40px;
+  text-align: center;
+  border: none;
+  font-size: 16px;
+  background-color: transparent;
+  appearance: textfield;
 }
 
 .quantity {
@@ -73,8 +84,10 @@
 }
 
 .subtotal {
-  font-size: 18px;
+  font-size: 20px;
   margin-bottom: 10px;
+  font-weight: bold;
+  justify-content: space-between;
 }
 
 .checkoutButton {
@@ -82,6 +95,7 @@
   color: white;
   padding: 10px 20px;
   border: none;
+  border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
 }
@@ -93,14 +107,13 @@
 }
 
 .deleteButton {
-  background-color: #ff4136;
-  color: white;
-  border: none;
-  padding: 5px 10px;
+  margin-left: 10px;
+  font-size: 16px;
+  color: rgb(191, 14, 14);
+  padding: 2px;
   cursor: pointer;
-  margin-top: 10px;
 }
 
 .deleteButton:hover {
-  background-color: #ff1a1a;
+  color:#2323d6;
 }

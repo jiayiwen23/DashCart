@@ -1,18 +1,21 @@
 import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
+import styles from "./Profile.module.css";
 
 const Profile = () => {
-  const { logout } = useAuth0();
+  const { user, logout } = useAuth0();
 
   return (
-    <div>
-      <button
-        onClick={() =>
-          logout({ logoutParams: { returnTo: window.location.origin } })
-        }
-      >
-        Log Out
-      </button>
+    <div className={styles.profileContainer}>
+        <p className={styles.welcomeText}>Welcome, {user.name}!</p>
+        <button
+            className={styles.logoutButton}
+            onClick={() =>
+              logout({ logoutParams: { returnTo: window.location.origin } })
+          }
+        >
+          Log out
+        </button>
     </div>
   );
 };

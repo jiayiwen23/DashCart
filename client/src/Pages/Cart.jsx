@@ -6,6 +6,7 @@ import useDeleteCartItem from "../hooks/useDeleteCartItem";
 import styles from "./Cart.module.css";
 import { useAuth0 } from "@auth0/auth0-react";
 import { formatCurrency } from "../Utils/formatCurrency";
+import { RiDeleteBin5Fill } from "react-icons/ri";
 
 const Cart = () => {
   const { isAuthenticated, loginWithRedirect, getAccessTokenSilently } =
@@ -49,7 +50,21 @@ const Cart = () => {
     return (
       <div className={styles.cartContainer}>
         <h1>Start your journey now</h1>
-        <button onClick={loginWithRedirect}>Log In</button>
+        <button
+          onClick={() => loginWithRedirect()}
+          style={{
+            backgroundColor: '#4CAF50',
+            color: 'white',
+            padding: '10px 20px',
+            border: 'none',
+            borderRadius: '4px',
+            fontSize: '16px',
+            cursor: 'pointer',
+            transition: 'background-color 0.3s',
+          }}
+      >
+        Log in
+        </button>
       </div>
     );
   }
@@ -84,7 +99,13 @@ const Cart = () => {
                       >
                         -
                       </button>
-                      <span className={styles.quantity}>{item.quantity}</span>
+                      <input
+                        type="number"
+                        value={item.quantity}
+                        onChange={(e) => handleQuantityChange(item.itemId, parseInt(e.target.value) || 1)}
+                        className={styles.quantityInput}
+                        min="1"
+                      />
                       <button
                         onClick={() =>
                           handleQuantityChange(item.itemId, item.quantity + 1)
@@ -102,14 +123,14 @@ const Cart = () => {
                     onClick={() => handleDeleteItem(item.itemId)}
                     className={styles.deleteButton}
                   >
-                    Delete
+                    <RiDeleteBin5Fill />
                   </button>
                 </li>
               ))}
             </ul>
             <div className={styles.cartSummary}>
               <div className={styles.subtotal}>
-                <span>Subtotal:</span>
+                <span>Subtotal  </span>
                 <span>
                   {formatCurrency(
                     cartItems.reduce(

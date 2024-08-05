@@ -222,6 +222,7 @@ app.get("/cart-items", requireAuth, async (req, res) => {
         price: item.product.price,
         image: item.product.image,
         category: item.product.category,
+        description: item.product.description,
       },
     }));
 

@@ -14,8 +14,35 @@ datasource db {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
-  email        String   @unique
-  auth0Id      String   @unique @default("")
-  name         String?
+  id        Int      @id @default(autoincrement())
+  auth0Id   String   @unique @default("")
+  email     String   @unique
+  name      String
+  cart      Cart?    // Optional relation
+  cartId    Int?     @unique 
+}
+
+model Cart { 
+  id        Int        @id @default(autoincrement()) 
+  user      User       @relation(fields: [userId], references: [id])
+  userId    Int        @unique
+  cartItems CartItem[] // One-to-many relationship with CartItem
+}
+
+model CartItem {
+  id        Int     @id @default(autoincrement())
+  cartId    Int
+  productId Int
+  quantity  Int
+  cart      Cart    @relation(fields: [cartId], references: [id])
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model Product {
+  id          Int        @id @default(autoincrement())
+  title       String
+  price       Decimal
+  image       String
+  category    String
+  cartItems   CartItem[]
 }

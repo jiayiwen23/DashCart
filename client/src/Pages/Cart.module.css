@@ -6,7 +6,7 @@
 }
 
 .cartTitle {
-  font-size: 24px;
+  font-size: 22px;
   margin-bottom: 20px;
 }
 
@@ -34,13 +34,14 @@
 }
 
 .itemTitle {
-  font-size: 18px;
+  font-size: 16px;
   margin-bottom: 5px;
 }
 
 .itemPrice {
   font-weight: bold;
-  color: #333;
+  color: #8b5003;
+  font-size: 18px;
 }
 
 .quantityControl {
@@ -83,8 +84,10 @@
 }
 
 .subtotal {
-  font-size: 18px;
+  font-size: 20px;
   margin-bottom: 10px;
+  font-weight: bold;
+  justify-content: space-between;
 }
 
 .checkoutButton {
@@ -92,6 +95,7 @@
   color: white;
   padding: 10px 20px;
   border: none;
+  border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
 }
@@ -104,11 +108,10 @@
 
 .deleteButton {
   margin-left: 10px;
-  font-size: 20px;
+  font-size: 16px;
   color: rgb(191, 14, 14);
-  padding: 5px;
+  padding: 2px;
   cursor: pointer;
-  margin-top: 10px;
 }
 
 .deleteButton:hover {

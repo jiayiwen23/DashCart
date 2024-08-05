@@ -130,7 +130,7 @@ const Cart = () => {
             </ul>
             <div className={styles.cartSummary}>
               <div className={styles.subtotal}>
-                <span>Subtotal: </span>
+                <span>Subtotal  </span>
                 <span>
                   {formatCurrency(
                     cartItems.reduce(

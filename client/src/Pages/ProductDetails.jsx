@@ -18,6 +18,7 @@ const ProductDetails = () => {
   const handleAddToCart = () => {
     if (!isAuthenticated) {
       console.log("User must be authenticated to add items to the cart.");
+      setNotification("Please log in!");
       return;
     }
     addToCart(product.id, quantity)

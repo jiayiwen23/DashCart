@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart, faUser } from "@fortawesome/free-solid-svg-icons";
 import styles from "./Navbar.module.css";
 import { useAuth0 } from "@auth0/auth0-react";
+import { BsCart4 } from "react-icons/bs";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -12,8 +13,8 @@ const Navbar = () => {
   return (
     <nav className={styles.navbar}>
       <div className={styles.navbarLeft} onClick={() => navigate("/")}>
-        <img src="/target.webp" alt="TargetLogo" className={styles.navImage} />
-        <h1 className={styles.navbarTitle}>Online Retail Shop</h1>
+        <BsCart4 className={styles.navImage} /> 
+        <h1 className={styles.navbarTitle}>Dash Cart</h1>
       </div>
       <div className={styles.navButtons}>
         <button onClick={() => navigate("/")}>Home</button>

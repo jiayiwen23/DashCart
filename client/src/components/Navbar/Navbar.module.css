@@ -8,14 +8,16 @@
 }
 
 .navImage {
-  width: 50px;
+  font-size: 3.5rem; 
+  margin-right: 10px; 
+  color: #8b5003; 
 }
 
 .navbarTitle {
-  color: black;
-  font-size: 25px;
+  font-size: 30px;
   margin-left: 20px;
-  transition: color 0.3s;
+  color: #8b5003;
+  font-family: Verdana, Geneva, Tahoma, sans-serif; 
 }
 
 .navbarLeft {

@@ -49,7 +49,21 @@ const Cart = () => {
     return (
       <div className={styles.cartContainer}>
         <h1>Start your journey now</h1>
-        <button onClick={loginWithRedirect}>Log In</button>
+        <button
+          onClick={() => loginWithRedirect()}
+          style={{
+            backgroundColor: '#4CAF50',
+            color: 'white',
+            padding: '10px 20px',
+            border: 'none',
+            borderRadius: '4px',
+            fontSize: '16px',
+            cursor: 'pointer',
+            transition: 'background-color 0.3s',
+          }}
+      >
+        Log in
+        </button>
       </div>
     );
   }

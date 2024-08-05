@@ -6,6 +6,7 @@ import useDeleteCartItem from "../hooks/useDeleteCartItem";
 import styles from "./Cart.module.css";
 import { useAuth0 } from "@auth0/auth0-react";
 import { formatCurrency } from "../Utils/formatCurrency";
+import { RiDeleteBin5Fill } from "react-icons/ri";
 
 const Cart = () => {
   const { isAuthenticated, loginWithRedirect, getAccessTokenSilently } =
@@ -122,7 +123,7 @@ const Cart = () => {
                     onClick={() => handleDeleteItem(item.itemId)}
                     className={styles.deleteButton}
                   >
-                    Delete
+                    <RiDeleteBin5Fill />
                   </button>
                 </li>
               ))}

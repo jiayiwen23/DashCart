@@ -58,6 +58,7 @@ const ProductDetails = () => {
       <div className={styles.productInfoColumn}>
         <h1 className={styles.category}>{product.category}</h1>
         <h1 className={styles.productTitle}>{product.title}</h1>
+        <p className={styles.productDescription}>{product.description}</p>
         <p className={styles.productPrice}>${product.price}</p>
         <div className={styles.quantitySelector}>
           <span>Quantity</span>

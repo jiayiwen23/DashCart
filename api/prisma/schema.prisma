@@ -44,5 +44,6 @@ model Product {
   price       Decimal
   image       String
   category    String
+  description String
   cartItems   CartItem[]
 }

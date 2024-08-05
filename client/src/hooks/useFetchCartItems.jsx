@@ -26,21 +26,27 @@ const useFetchCartItems = (isAuthenticated) => {
         );
 
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          if (response.status === 404) {
+            // No items in the cart, set to empty array
+            setCartItems([]);
+          } else {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+        } else {
+          const data = await response.json();
+          setCartItems(
+            data.map((item) => ({
+              itemId: item.itemId,
+              quantity: item.quantity,
+              productId: item.product.productId,
+              title: item.product.title,
+              price: item.product.price,
+              image: item.product.image,
+              category: item.product.category,
+              description: item.product.description,
+            }))
+          );
         }
-
-        const data = await response.json();
-        setCartItems(
-          data.map((item) => ({
-            itemId: item.itemId,
-            quantity: item.quantity,
-            productId: item.product.productId,
-            title: item.product.title,
-            price: item.product.price,
-            image: item.product.image,
-            category: item.product.category,
-          }))
-        );
       } catch (error) {
         console.error("Error fetching cart items:", error);
         setError(error);

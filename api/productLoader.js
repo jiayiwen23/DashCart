@@ -32,6 +32,7 @@ export async function loadProductsToDatabase() {
     price: new Prisma.Decimal(product.price),
     image: product.image,
     category: product.category,
+    description: product.description
   }));
 
   // Batch insert new products

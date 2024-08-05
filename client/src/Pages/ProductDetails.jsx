@@ -12,6 +12,7 @@ const ProductDetails = () => {
   const { product, loading, error } = useProductDetails(productId);
   const { isAuthenticated } = useAuth0();
   const { quantity, increment, decrement } = useQuantity();
+  const [notification, setNotification] = useState('');
   const addToCart = useAddToCart();
 
   const handleAddToCart = () => {
@@ -22,11 +23,23 @@ const ProductDetails = () => {
     addToCart(product.id, quantity)
       .then((response) => {
         console.log("Product added to cart successfully:", response);
+        setNotification("Product added to cart successfully!");
       })
       .catch((error) => {
         console.error("Error adding product to cart:", error);
       });
   };
+
+  useEffect(() => {
+    if (notification) {
+      // Set a timer to clear the notification after 2 seconds
+      const timer = setTimeout(() => {
+        setNotification('');
+      }, 2000);
+      // Cleanup function to clear the timer if the component unmounts
+      return () => clearTimeout(timer);
+    }
+  }, [notification]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -34,26 +47,34 @@ const ProductDetails = () => {
 
   return (
     <div className={styles.productDetails}>
-      <h1 className={styles.productTitle}>{product.title}</h1>
-      <img
-        src={product.image}
-        alt={product.title}
-        className={styles.productImage}
-      />
-      <p className={styles.productPrice}>${product.price}</p>
-      <p className={styles.productDescription}>{product.description}</p>
-      <div className={styles.productQuantity}>
-        <button onClick={decrement} disabled={quantity === 1}>
-          -
-        </button>
-        <span>{quantity}</span>
-        <button onClick={increment}>+</button>
+      <div className={styles.productImageColumn}> 
+        <img
+          src={product.image}
+          alt={product.title}
+          className={styles.productImage}
+        />
       </div>
-      <RequireAuth>
-        <button className={styles.addToCartButton} onClick={handleAddToCart}>
-          Add to Cart
-        </button>
-      </RequireAuth>
+      <div className={styles.productInfoColumn}>
+        <h1 className={styles.productTitle}>{product.title}</h1>
+        <p className={styles.productPrice}>${product.price}</p>
+        <p className={styles.productDescription}>{product.description}</p>
+        <div className={styles.quantitySelector}>
+          <span>Quantity</span>
+          <div className={styles.productQuantity}>
+            <button onClick={decrement} disabled={quantity === 1}>
+              -
+            </button>
+            <span>{quantity}</span>
+            <button onClick={increment}>+</button>
+          </div>
+        </div>
+        <RequireAuth>
+          <button className={styles.addToCartButton} onClick={handleAddToCart}>
+            Add to Cart
+          </button>
+        </RequireAuth>
+        {notification && <div className={styles.notification}>{notification}</div>}
+      </div>
     </div>
   );
 };

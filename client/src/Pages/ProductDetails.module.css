@@ -1,36 +1,68 @@
 .productDetails {
-  padding: 20px;
-  max-width: 800px;
-  margin: 0 auto;
-  text-align: center;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
+  display: flex;
+  padding: 30px;
+}
+
+.productImageColumn {
+  flex: 1;
+  display: flex;
+  justify-content: center; 
 }
 
 .productImage {
   width: 100%;
   max-width: 300px;
+  padding: 30px;
   height: auto;
-  margin: 20px 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.productInfoColumn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .productTitle {
-  font-size: 24px;
-  margin: 10px 0;
+  font-size: 25px;
 }
 
 .productPrice {
-  color: #888;
-  font-size: 20px;
+  color: #3377ed;
+  font-size: 25px;
   margin: 10px 0;
+}
+
+.quantitySelector {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 20px 0;
 }
 
 .productQuantity {
   display: flex;
-  justify-content: center;
-  gap: 20px;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin: 0 10px;
+}
+
+.productQuantity button {
+  background-color: #f0f0f0;
+  border: none;
+  padding: 5px 15px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.productQuantity span {
+  font-size: 16px;
+  padding: 5px 10px;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
 }
 
 .addToCartButton {
@@ -42,8 +74,22 @@
   cursor: pointer;
   border-radius: 4px;
   transition: background-color 0.3s;
+  max-width: 300px;
 }
 
 .addToCartButton:hover {
   background-color: #218838;
+}
+
+.notification {
+  color: green; /* Success message color */
+  background-color: #f0fff0;
+  padding: 10px;
+  border: 1px solid green;
+  border-radius: 4px;
+  margin-top: 10px;
+  font-size: 16px;
+  transition: opacity 0.5s ease-out;
+  text-align: center;
+  max-width: 280px;
 }

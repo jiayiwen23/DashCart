@@ -98,7 +98,13 @@ const Cart = () => {
                       >
                         -
                       </button>
-                      <span className={styles.quantity}>{item.quantity}</span>
+                      <input
+                        type="number"
+                        value={item.quantity}
+                        onChange={(e) => handleQuantityChange(item.itemId, parseInt(e.target.value) || 1)}
+                        className={styles.quantityInput}
+                        min="1"
+                      />
                       <button
                         onClick={() =>
                           handleQuantityChange(item.itemId, item.quantity + 1)
@@ -123,7 +129,7 @@ const Cart = () => {
             </ul>
             <div className={styles.cartSummary}>
               <div className={styles.subtotal}>
-                <span>Subtotal:</span>
+                <span>Subtotal: </span>
                 <span>
                   {formatCurrency(
                     cartItems.reduce(

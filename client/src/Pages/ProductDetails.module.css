@@ -36,6 +36,11 @@
   font-weight: bold;
 }
 
+.category {
+  font-size: 15px;
+  color: gray;
+}
+
 .quantitySelector {
   display: flex;
   flex-direction: row;

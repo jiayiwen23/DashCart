@@ -20,13 +20,10 @@ const Navbar = () => {
         <button onClick={() => navigate("/")}>
           <FontAwesomeIcon icon={faHouse} />
         </button>
-        <button onClick={() => navigate("/cart")}>
+        {isAuthenticated ? (
+          <button onClick={() => navigate("/cart")}>
           <FontAwesomeIcon icon={faShoppingCart} />
         </button>
-        {isAuthenticated ? (
-          <button onClick={() => navigate("/profile")}>
-            <FontAwesomeIcon icon={faUser} />
-          </button>
         ) : (
           <button onClick={loginWithRedirect}>Log in</button>
         )}

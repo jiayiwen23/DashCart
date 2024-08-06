@@ -9,7 +9,6 @@ import Home from "./Pages/Home";
 import VerifyUser from "./Utils/VerifyUser";
 import ProductDetails from "./Pages/ProductDetails";
 import Cart from "./Pages/Cart";
-import Profile from "./Pages/Profile";
 
 const App = () => {
   return (
@@ -35,7 +34,6 @@ const App = () => {
                 />
                 <Route path="/verify-user" element={<VerifyUser />} />
                 <Route path="/cart" element={<Cart />} />
-                <Route path="/profile" element={<Profile />} />
               </Routes>
             </BrowserRouter>
           </AuthTokenProvider>

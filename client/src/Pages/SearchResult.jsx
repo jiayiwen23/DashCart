@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import useFetchProducts from "../hooks/useFetchProducts";
+import { useNavigate } from "react-router-dom";
 
 const SearchResult = () => {
   const location = useLocation();
@@ -8,6 +9,7 @@ const SearchResult = () => {
   const searchItem = searchParams.get("q").toLocaleLowerCase() || "";
 
   const { products, loading, error } = useFetchProducts();
+  const navigate = useNavigate();
 
   const filterProducts = useMemo(() => {
     if (!searchItem) return products;
@@ -26,11 +28,15 @@ const SearchResult = () => {
       ) : (
         <ul>
           {filterProducts.map((product) => (
-            <li key={product.id}>
+            <div
+              key={product.id}
+              onClick={() => navigate(`/product-details/${product.id}`)}
+              style={{ cursor: "pointer" }}
+            >
               <img src={product.image} alt={product.title} />
               <div>{product.title}</div>
               <div>{product.price}</div>
-            </li>
+            </div>
           ))}
         </ul>
       )}

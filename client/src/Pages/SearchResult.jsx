@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import useFetchProducts from "../hooks/useFetchProducts";
 import { useNavigate } from "react-router-dom";
+import styles from "../components/ProductList/ProductList.module.css";
 
 const SearchResult = () => {
   const location = useLocation();
@@ -20,25 +21,30 @@ const SearchResult = () => {
 
   if (loading) return <div>Loading ... </div>;
   if (error) return <div>Error: {error}</div>;
+  
   return (
-    <div>
-      <h1>Search Result for: {searchItem}</h1>
+    <div className={styles.section}>
+      <h1>Search Results for: {searchItem}</h1>
       {filterProducts.length === 0 ? (
         <p>No results found.</p>
       ) : (
-        <ul>
+        <div className={styles.productList}>
           {filterProducts.map((product) => (
             <div
+              className={styles.productCard}
               key={product.id}
               onClick={() => navigate(`/product-details/${product.id}`)}
-              style={{ cursor: "pointer" }}
             >
-              <img src={product.image} alt={product.title} />
-              <div>{product.title}</div>
-              <div>{product.price}</div>
+              <img
+                src={product.image}
+                alt={product.title}
+                className={styles.productImage}
+              />
+              <p className={styles.productTitle}>{product.title}</p>
+              <p className={styles.productPrice}>${product.price}</p>
             </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );

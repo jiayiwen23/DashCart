@@ -23,14 +23,9 @@ const Navbar = () => {
         <BsCart4 className={styles.navImage} />
         <h1 className={styles.navbarTitle}>Dash Cart</h1>
       </div>
-      <SearchBar
-        searchItem={searchItem}
-        setSearchItem={setSearchItem}
-        onSearch={handleSearch}
-      />
       <div className={styles.navButtons}>
         <button onClick={() => navigate("/")}>
-          <FontAwesomeIcon icon={faHouse} />
+          <FontAwesomeIcon icon={faHouse}/>
         </button>
         {isAuthenticated ? (
           <button onClick={() => navigate("/cart")}>
@@ -39,6 +34,13 @@ const Navbar = () => {
         ) : (
           <button onClick={loginWithRedirect}>Log in</button>
         )}
+      </div>
+      <div className={styles.searchBarContainer}>
+        <SearchBar
+          searchItem={searchItem}
+          setSearchItem={setSearchItem}
+          onSearch={handleSearch}
+        />
       </div>
     </nav>
   );

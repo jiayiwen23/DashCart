@@ -20,19 +20,19 @@ const Navbar = () => {
   return (
     <nav className={styles.navbar}>
       <div className={styles.navbarLeft} onClick={() => navigate("/")}>
-        <BsCart4 className={styles.navImage} />
+        <BsCart4 className={styles.navImage} aria-label="Home"/>
         <h1 className={styles.navbarTitle}>Dash Cart</h1>
       </div>
       <div className={styles.navButtons}>
-        <button onClick={() => navigate("/")}>
+        <button onClick={() => navigate("/")} aria-label="Home">
           <FontAwesomeIcon icon={faHouse}/>
         </button>
         {isAuthenticated ? (
-          <button onClick={() => navigate("/cart")}>
+          <button onClick={() => navigate("/cart")} aria-label="Cart">
             <FontAwesomeIcon icon={faShoppingCart} />
           </button>
         ) : (
-          <button onClick={loginWithRedirect}>Log in</button>
+          <button onClick={loginWithRedirect} aria-label="Log in">Log in</button>
         )}
       </div>
       <div className={styles.searchBarContainer}>

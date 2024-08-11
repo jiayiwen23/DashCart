@@ -134,6 +134,7 @@ const Cart = () => {
                   <button
                     onClick={() => handleDeleteItem(item.itemId)}
                     className={styles.deleteButton}
+                     aria-label="Delete item"
                   >
                     <RiDeleteBin5Fill />
                   </button>

@@ -27,6 +27,7 @@ const SearchBar = ({ searchItem, setSearchItem, onSearch }) => {
       <button
         className={styles.searchButton}
         onClick={() => onSearch(searchItem)}
+        aria-label="Search"
       >
         <FontAwesomeIcon icon={faSearch} />
       </button>

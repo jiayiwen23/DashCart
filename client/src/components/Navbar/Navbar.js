@@ -25,7 +25,7 @@ const Navbar = () => {
       </div>
       <div className={styles.navButtons}>
         <button onClick={() => navigate("/")} aria-label="Home">
-          <FontAwesomeIcon icon={faHouse}/>
+          <FontAwesomeIcon icon={faHouse} />
         </button>
         {isAuthenticated ? (
           <button onClick={() => navigate("/cart")} aria-label="Cart">

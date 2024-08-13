@@ -35,7 +35,7 @@ const AuthDebugger = () => {
             <h2>Auth Token Debugger</h2>
             <h3>Your authentication token:</h3>
             {token ? (
-                <textarea readOnly value={token} style={{ width: '95%', height: '200px' }} />
+                <textarea readOnly value={token} className={styles.tokenTextarea} />
             ) : (
                 <p>Loading...</p>
             )}

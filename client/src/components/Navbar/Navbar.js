@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShoppingCart, faHouse } from "@fortawesome/free-solid-svg-icons";
+import { faShoppingCart, faHouse, faUser } from "@fortawesome/free-solid-svg-icons";
 import styles from "./Navbar.module.css";
 import { useAuth0 } from "@auth0/auth0-react";
 import { BsCart4 } from "react-icons/bs";
@@ -26,6 +26,9 @@ const Navbar = () => {
       <div className={styles.navButtons}>
         <button onClick={() => navigate("/")} aria-label="Home">
           <FontAwesomeIcon icon={faHouse} />
+        </button>
+        <button onClick={() => navigate("/auth")} aria-label="Auth Debugger">
+          <FontAwesomeIcon icon={faUser} />
         </button>
         {isAuthenticated ? (
           <button onClick={() => navigate("/cart")} aria-label="Cart">

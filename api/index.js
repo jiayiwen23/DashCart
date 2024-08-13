@@ -24,6 +24,11 @@ app.use(morgan("dev"));
 const { PrismaClient } = pkg;
 const prisma = new PrismaClient();
 
+// this is a public endpoint because it doesn't have the requireAuth middleware
+app.get("/ping", (req, res) => {
+  res.send("pong");
+});
+
 // this endpoint is used by the client to verify the user status and to make sure the user is registered in our database once they signup with Auth0
 // if not registered in our database we will create it.
 // if the user is already registered we will return the user information

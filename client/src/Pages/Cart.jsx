@@ -9,16 +9,10 @@ import { formatCurrency } from "../Utils/formatCurrency";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 
 const Cart = () => {
-  const { isAuthenticated, loginWithRedirect, getAccessTokenSilently, logout, user } =
-    useAuth0();
-  const { cartItems, isLoading, error, setCartItems } =
-    useFetchCartItems(isAuthenticated);
-  const {
-    deleteCartItem,
-    isLoading: isDeleting,
-    error: deleteError,
-    setError: setDeleteError,
-  } = useDeleteCartItem();
+  const { isAuthenticated, loginWithRedirect, getAccessTokenSilently, logout, user } = useAuth0();
+  const { cartItems, isLoading, error, setCartItems } = useFetchCartItems(isAuthenticated);
+  
+  const { deleteCartItem, error: deleteError} = useDeleteCartItem();
 
   const handleQuantityChange = async (itemId, newQuantity) => {
     try {
@@ -134,6 +128,7 @@ const Cart = () => {
                   <button
                     onClick={() => handleDeleteItem(item.itemId)}
                     className={styles.deleteButton}
+                     aria-label="Delete item"
                   >
                     <RiDeleteBin5Fill />
                   </button>

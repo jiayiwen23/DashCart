@@ -8,16 +8,15 @@
 }
 
 .navImage {
-  font-size: 3.5rem; 
-  margin-right: 10px; 
-  color: #8b5003; 
+  font-size: 3.5rem;
+  margin-right: 10px;
+  color: #8b5003;
 }
 
 .navbarTitle {
   font-size: 30px;
-  margin-left: 20px;
   color: #8b5003;
-  font-family: Verdana, Geneva, Tahoma, sans-serif; 
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .navbarLeft {
@@ -52,4 +51,67 @@
 
 .navButtons button svg {
   margin-right: 8px;
+}
+
+/* Responsive styling for mobile screens */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 10px 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto;
+  }
+
+  .navbarLeft {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+
+  .navbarTitle {
+    font-size: 24px;
+    margin-left: 10px;
+  }
+
+  .navImage {
+    font-size: 2.5rem;
+  }
+
+  .navButtons {
+    width: 100%;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+  }
+
+  .navButtons button {
+    font-size: 16px;
+  }
+
+  .searchBarContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+}
+
+/* Styling for tablet screens */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .navbar {
+    padding: 15px 30px;
+  }
+
+  .navbarTitle {
+    font-size: 28px;
+    margin-left: 15px;
+  }
+
+  .navImage {
+    font-size: 3rem;
+  }
+
+  .navButtons button {
+    font-size: 17px;
+  }
 }

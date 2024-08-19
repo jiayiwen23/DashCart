@@ -1,6 +1,10 @@
 # DashCart
 
 DashCart is a responsive and secure online retail store built with React, Node.js, Auth0, and Prisma. It offers a seamless shopping experience, allowing users to browse products, view details, and manage their cart with ease.
+Demo video: https://www.loom.com/share/a687f47cf1e145e29549a1bfa5c97136?sid=33317bf4-e25e-48da-a72b-11a5a8803e03
+![Screenshot 2024-08-18 212741](https://github.com/user-attachments/assets/2321ef31-0c51-4e32-a8a1-e917d472e689)
+![Screenshot 2024-08-18 212801](https://github.com/user-attachments/assets/81a762be-d59e-49fb-b558-91e4b51baf78)
+![Screenshot 2024-08-18 212741](https://github.com/user-attachments/assets/6d862744-53c4-4ea1-aa4d-7816830f5eb5)
 
 ## Table of Contents
 
